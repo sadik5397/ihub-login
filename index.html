@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iHub TV Login</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -23,11 +22,14 @@
             overflow: hidden;
         }
 
-        .lottie-background {
+        .background {
             position: absolute;
             width: 100%;
             height: 100%;
-            opacity: 0.15;
+            background-image: url('assets/background.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
             z-index: 1;
         }
 
@@ -131,7 +133,7 @@
 </head>
 <body>
     <div class="container">
-        <div id="lottie-container" class="lottie-background"></div>
+        <div class="background"></div>
         <div class="login-form">
             <img src="assets/ihub-logo.png" alt="iHub Logo" class="logo">
             <div id="form-content">
@@ -145,18 +147,6 @@
     </div>
 
     <script>
-        // Initialize Lottie animation
-        lottie.loadAnimation({
-            container: document.getElementById('lottie-container'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'assets/ihub-bg.json',
-            rendererSettings: {
-                preserveAspectRatio: 'xMidYMid slice'
-            }
-        });
-
         // Get the code from URL query parameters
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
@@ -220,6 +210,8 @@
                     })
                 });
 
+                const data = await response.json();
+
                 if (response.ok) {
                     // Redirect or show success message
                     document.body.innerHTML = `
@@ -230,8 +222,7 @@
                         </div>
                     `;
                 } else {
-                    const errorText = await response.text();
-                    errorDiv.textContent = errorText;
+                    errorDiv.textContent = data.message;
                 }
             } catch (error) {
                 errorDiv.textContent = "An error occurred. Please try again.";
